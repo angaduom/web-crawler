@@ -9,6 +9,7 @@ var server = app.listen(PORT,function(){
 })
 
 
+
 //now lets connect socket.io to this server
 var io =  require('socket.io').listen(server);
 //on a connection from a client do these things
