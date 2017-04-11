@@ -4,11 +4,13 @@ import { Search } from './search.component';
 @Component({
 	selector:'my-dashboard',
 	template:`
-	{{title}}
-	<search></search>
+	<div class="container margin-top-5">
+		<h1>{{title}}</h1>
+		<search></search>
+	</div>
 	`
 })
 
 export class Dashboard{
-	title="Lets see if we can manulate the DOM using socket.io. Also how did we pass the socket variable to components again?"
+	title="WEB CRAWLER"
 }

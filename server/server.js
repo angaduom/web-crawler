@@ -7,8 +7,10 @@ var PORT = 8000;
 var server = app.listen(PORT,function(){
 	console.log("The app is listening on port",PORT);
 })
-
-
+//require Crawler
+var crawlerFunctions = require('./crawler.js');
+// For testing purpose only
+//crawlerFunctions.Crawler("https://www.instagram.com/p/BRXYtFdl3Fb6EpHr8B8bfN1mP5Rx6SqJXjDdHA0/");
 
 //now lets connect socket.io to this server
 var io =  require('socket.io').listen(server);
@@ -24,5 +26,19 @@ io.on('connection',function(socket){
 	socket.on('component-contact',function(data){
 		console.log('component connection',data);
 		socket.emit('component-contact',"sup from the server to search")
+	})
+
+	socket.on('crawl-input',function(url){
+		console.log("url received", url);
+		//call the crawler.
+		var Promise = crawlerFunctions.Crawler(url);
+		Promise.then(function(data){
+			console.log("Promise.then")
+			//return data to front end
+			console.log(data);
+			socket.emit('crawl-output', data.toString());
+		}).catch(function(err){
+			console.log(err);
+		});
 	})
 })

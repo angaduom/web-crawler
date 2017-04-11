@@ -11,12 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var Dashboard = (function () {
     function Dashboard() {
-        this.title = "Lets see if we can manulate the DOM using socket.io. Also how did we pass the socket variable to components again?";
+        this.title = "WEB CRAWLER";
     }
     Dashboard = __decorate([
         core_1.Component({
             selector: 'my-dashboard',
-            template: "\n\t{{title}}\n\t<search></search>\n\t"
+            template: "\n\t<div class=\"container margin-top-5\">\n\t\t<h1>{{title}}</h1>\n\t\t<search></search>\n\t</div>\n\t"
         }), 
         __metadata('design:paramtypes', [])
     ], Dashboard);
