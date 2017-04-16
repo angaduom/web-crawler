@@ -2,21 +2,21 @@
 //start functions
 var file = require('./fileWriter.js');
 
-function Crawler(url) {
+function Crawler(url,respect) {
     //require crawler
     var Crawler = require('simplecrawler');
     return new Promise(function(resolve, reject) {
         //url to crawl
         console.log(url);
+        console.log(respect);
         var crawler = new Crawler(url)
         //crawler peoperties
         crawler.interval = 10000; // five seconds 
         crawler.maxConcurrency = 1;
         crawler.maxDepth = 1;
-        crawler.respectRobotsTxt = true;
+        crawler.respectRobotsTxt = (respect === "true");
         crawler.decodeResponses = true;
         /************************************/
-        console.log("call started smritimon");
         crawler.start();
         //start 
         crawler.on("fetchstart", function() {
@@ -31,7 +31,6 @@ function Crawler(url) {
         //invalid domain
         crawler.on("invaliddomain", function(queueItem) {
             console.log(queueItem, " is invalid domain");
-            resolve(queueItem, " is invalid domain");
             resolve("Invalid Domain Provided");
         })
         //robots.txt blocked us
@@ -63,13 +62,14 @@ function Crawler(url) {
         //main error
         crawler.on("fetcherror", function(queueItem, responseObject) {
             console.log("fetch error");
-            console.log(responseObject);
+            //console.log(responseObject);
             resolve(responseObject);
         })
         //success
         crawler.on("fetchcomplete", function(queueItem, responseBody, responseObject) {
             console.log("fetchcomplete");
-            console.log(responseBody);
+            //console.log(responseBody);
+            //console.log("from here");
             file.writeFile(responseBody);
             resolve(responseBody);
         });

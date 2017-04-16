@@ -39,13 +39,14 @@ var Search = (function () {
     Search.prototype.clicked = function (event) {
         console.log("crawl initiated");
         console.log(this.cData.searchString);
-        //emit url to server
-        socket.emit('crawl-input', this.cData.searchString);
+        console.log(document.getElementById("respect").value);
+        var respect = document.getElementById("respect").value;
+        socket.emit('crawl-input', this.cData.searchString, respect);
     };
     Search = __decorate([
         core_1.Component({
             selector: 'search',
-            template: "\n\t\n\t<div class=\"row margin-top-5\">\n\t\t<div class=\"col-md-12 col-lg-12\">\n\t\t<input [(ngModel)]=\"cData.searchString\" class=\"text-input\" placeholder=\"INSERT URL HERE\">\n\t\t</div>\n\t</div>\n\t<div class=\"row margin-top-5\">\n\t\t<div class=\"central-button center\">\n\t\t\t<button class=\"btn btn-info btn-lg\" (click)=\"clicked($event)\"> CRAWL </button>\n\t\t</div>\n\t</div>\n\t<div class=\"row margin-top-5\">\n\t\t<div class=\"col-md-12 col-lg-12 results\">\n\t\t{{cData.results}}\n\t\t</div>\n\t</div>\n\t"
+            template: "\n\t\n\t<div class=\"row margin-top-5\">\n\t\t<div class=\"col-md-10 col-lg-10\">\n\t\t<input [(ngModel)]=\"cData.searchString\" class=\"text-input\" placeholder=\"INSERT URL HERE\">\n\t\t</div>\n\t\t<div class=\"col-md-2 col-lg-2\">\n\t\t\t<select id=\"respect\" class=\"selection\">\n\t\t\t\t  <option value=true>TRUE</option>\n\t\t\t\t  <option value=false>FALSE</option>\n\t\t\t</select>\n\t\t</div>\n\t\t\n\t</div>\n\t<div class=\"row margin-top-5\">\n\t\t<div class=\"central-button center\">\n\t\t\t<button class=\"myButton\" (click)=\"clicked($event)\"> CRAWL </button>\n\t\t</div>\n\t</div>\n\t<div class=\"row margin-top-5\">\n\t\t<div class=\"col-md-12 col-lg-12 results max-height-autoscroll\">\n\t\t{{cData.results}}\n\t\t</div>\n\t</div>\n\t"
         }), 
         __metadata('design:paramtypes', [core_1.ChangeDetectorRef])
     ], Search);

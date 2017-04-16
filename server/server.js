@@ -28,15 +28,23 @@ io.on('connection',function(socket){
 		socket.emit('component-contact',"sup from the server to search")
 	})
 
-	socket.on('crawl-input',function(url){
-		console.log("url received", url);
+	socket.on('crawl-input',function(url,respect){
+		//console.log("url received", url);
+		//console.log("respect status" , respect)
 		//call the crawler.
-		var Promise = crawlerFunctions.Crawler(url);
+		var Promise = crawlerFunctions.Crawler(url,respect);
 		Promise.then(function(data){
 			console.log("Promise.then")
 			//return data to front end
-			console.log(data);
-			socket.emit('crawl-output', data.toString());
+			//console.log(data);
+			if(typeof(data) === 'object'){
+				console.log("got and object")
+			socket.emit('crawl-output', "UNKOWN RESPONSE (SOME OTHER MECHANISM)");	
+			}
+			else{
+				socket.emit('crawl-output', data.toString());
+			}
+			
 		}).catch(function(err){
 			console.log(err);
 		});
