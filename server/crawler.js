@@ -2,13 +2,13 @@
 //start functions
 var file = require('./fileWriter.js');
 
-function Crawler(url,respect) {
+function crawler(url, respect) {
     //require crawler
     var Crawler = require('simplecrawler');
     return new Promise(function(resolve, reject) {
         //url to crawl
-        console.log(url);
-        console.log(respect);
+        console.log("URL TO CRAWL :", url);
+        console.log("RESPECT SETTING : ", respect);
         var crawler = new Crawler(url)
         //crawler peoperties
         crawler.interval = 10000; // five seconds 
@@ -16,62 +16,95 @@ function Crawler(url,respect) {
         crawler.maxDepth = 1;
         crawler.respectRobotsTxt = (respect === "true");
         crawler.decodeResponses = true;
+        crawler.timeout = 6000;
         /************************************/
         crawler.start();
         //start 
         crawler.on("fetchstart", function() {
-            console.log("started")
+            //console.log("started")
         })
         //fired when no robots.txt
         crawler.on("robotstxterror", function(err) {
-            console.log("robots.txt not found"); //smritis website. 	
+            //console.log("robots.txt not found"); //smritis website. 	
             console.log(err);
-            resolve(err);
+            resolve({
+                "url": url,
+                "err": "robotstxterror",
+                "success": false
+            });
         })
         //invalid domain
         crawler.on("invaliddomain", function(queueItem) {
-            console.log(queueItem, " is invalid domain");
-            resolve("Invalid Domain Provided");
+            //console.log(queueItem, " is invalid domain");
+            resolve({
+                "url": url,
+                "err": "invaliddomain",
+                "success": false
+            });
         })
         //robots.txt blocked us
         crawler.on("fetchdisallowed", function() {
-            console.log("fetchdisallowed");
-            resolve("Robots Exclusion Protocol blocking us!");
-        })
-        //fetch prevented
+            //console.log("fetchdisallowed");
+            resolve({
+                "url": url,
+                "err": "fetchdisallowed",
+                "success": false
+            });
+        }); //fetch prevented
         crawler.on("fetchprevented", function(queueItem) {
-            console.log(queueItem, " could not be fetched as it is prevented");
-           	resolve("The fetch was prevented");
+            //console.log(queueItem, " could not be fetched as it is prevented");
+            resolve({
+                "url": queueItem,
+                "err": "fetchprevented",
+                "success": false
+            });
         })
         //download condition
         crawler.on("downloadconditionerror", function(queueItem, err) {
-            console.log(queueItem, " could not be downloaded");
+            //console.log(queueItem, " could not be downloaded");
             console.log("because of error ", err);
-            resolve("The URL provided could not be downloaded");
+            resolve({
+                "url": queueItem,
+                "err": "downloadconditionerror",
+                "success": false
+            });
         })
         //time out
         crawler.on("fetchtimeout", function(queueItem, crawlerTimeOutValue) {
-            console.log(queueItem, "was timedout");
-            resolve("Timed Out");
+            //console.log(queueItem, "was timedout");
+            resolve({
+                "url": queueItem,
+                "err": "downloadconditionerror",
+                "success": false
+            });
         })
         //too much data
         crawler.on("fetchdataerror", function() {
-            console.log("too much data");
-            resolve("Cannot download the amount of data");
+            //console.log("too much data");
+            resolve({
+                "url": url,
+                "err": "fetchdataerror",
+                "success": false
+            });
         })
         //main error
         crawler.on("fetcherror", function(queueItem, responseObject) {
-            console.log("fetch error");
+            //console.log("fetch error");
             //console.log(responseObject);
-            resolve(responseObject);
+            resolve({
+                "url": queueItem,
+                "err": "fetcherror",
+                "success": false
+            });
         })
         //success
         crawler.on("fetchcomplete", function(queueItem, responseBody, responseObject) {
-            console.log("fetchcomplete");
-            //console.log(responseBody);
-            //console.log("from here");
             file.writeFile(responseBody);
-            resolve(responseBody);
+            resolve({
+                "url": url,
+                "err": "fetchcomplete",
+                "success": true
+            });
         });
         crawler.on("fetchredirect", function(oldQueueItem, redirectQueueItem, responseObject) {
             console.log("redirected");
@@ -79,5 +112,5 @@ function Crawler(url,respect) {
     });
 }
 module.exports = {
-    Crawler: Crawler
+    crawler: crawler
 };

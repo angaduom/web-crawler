@@ -65,7 +65,6 @@ export class Search implements OnInit{
 		console.log(this.cData.searchString);
 		console.log(document.getElementById("respect").value)
 		var respect = document.getElementById("respect").value;
-
 		socket.emit('crawl-input',this.cData.searchString,respect);
 	}
 }
